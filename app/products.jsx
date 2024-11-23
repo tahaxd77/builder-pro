@@ -24,6 +24,7 @@ import {
 
 
   const renderProduct = ({ item }) => (
+    
     <ProductCard 
       product={item}
       onPress={() => {
@@ -34,7 +35,6 @@ import {
             productId: item.ProductID,
             productName: item.ProductName,
             price: item.UnitPrice,
-            description: item.Description,
             stock: item.UnitsInStock
           }
         });

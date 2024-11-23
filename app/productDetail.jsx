@@ -6,20 +6,23 @@ import { useLocalSearchParams } from 'expo-router';
 import { Alert } from 'react-native';
 import { CartContext } from '../context/CartContext';
 import { router } from 'expo-router';
-
+import useCartStore from '../stores/useCartStore';
 
 export default function ProductDetail({  }) {
-    const { productId, productName, price, description, stock } = useLocalSearchParams();
+    const { productId, productName, price, stock } = useLocalSearchParams();
     const [quantity, setQuantity] = useState(1);
     const [fadeAnim] = useState(new Animated.Value(0));
-    const { addToCart } = useContext(CartContext);
+    const addToCart = useCartStore(state => state.addToCart);
+
     const handleAddToCart = () => {
-        addToCart({ productId, productName, price, description, stock }, quantity);
+        addToCart({ productId, productName, price, stock }, quantity);
         Alert.alert('Added to Cart', `You have added ${quantity} of ${productName} to your cart.`);
+        //router.push('/cart')
       };
     const handleBuyNow = () => {
-        addToCart({ productId, productName, price, description, stock }, quantity);
-        router.push("/cart");
+        addToCart({ productId, productName, price, stock }, quantity);
+        Alert.alert("buy")
+        router.push('/cart')
     };
 
   React.useEffect(() => {
@@ -66,8 +69,8 @@ export default function ProductDetail({  }) {
           <Text style={styles.addToCartText}>Add to Cart</Text>
           <Text style={styles.totalPrice}>Rs.{price * quantity}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addToCartBtn} >
-            <Text style={styles.addToCartText} onPress={handleBuyNow}>Buy Now</Text>
+        <TouchableOpacity style={styles.addToCartBtn} onPress={handleBuyNow}>
+            <Text style={styles.addToCartText} >Buy Now</Text>
             <Text style={styles.totalPrice}>Rs.{price * quantity}</Text>
         </TouchableOpacity>
       </Animated.View>

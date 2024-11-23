@@ -16,9 +16,12 @@ export const CartProvider = ({ children }) => {
             : item
         );
       } else {
+        console.log("adding new product")
         return [...prevItems, { product, quantity }];
       }
     });
+    console.log(cartItems)
+    
   };
 
   const removeFromCart = (productId) => {
