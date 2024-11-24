@@ -1,6 +1,6 @@
 // Cart.jsx
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList,TouchableOpacity } from 'react-native';
 import useCartStore from '../stores/useCartStore';
 import CartItem from '../components/CartItem';
 
@@ -35,6 +35,9 @@ export default function Cart() {
             contentContainerStyle={styles.listContainer}
           />
           <Text style={styles.totalText}>Total: Rs. {cartTotal.toFixed(2)}</Text>
+          <TouchableOpacity style={styles.buyNowButton}>
+          <Text style={styles.buyNowButtonText}>Buy Now</Text>
+        </TouchableOpacity>
         </>
       ) : (
         <Text style={styles.emptyText}>Your cart is empty</Text>
@@ -64,4 +67,16 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 32,
   },
+  buyNowButton: {
+    backgroundColor: '#28a745',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  buyNowButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  }
 });

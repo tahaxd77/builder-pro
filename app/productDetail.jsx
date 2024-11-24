@@ -13,6 +13,8 @@ export default function ProductDetail({  }) {
     const [quantity, setQuantity] = useState(1);
     const [fadeAnim] = useState(new Animated.Value(0));
     const addToCart = useCartStore(state => state.addToCart);
+    const cart = useCartStore(state => state.items);
+    console.log("cart: ", cart)
 
     const handleAddToCart = () => {
         addToCart({ productId, productName, price, stock }, quantity);
@@ -21,7 +23,6 @@ export default function ProductDetail({  }) {
       };
     const handleBuyNow = () => {
         addToCart({ productId, productName, price, stock }, quantity);
-        Alert.alert("buy")
         router.push('/cart')
     };
 
