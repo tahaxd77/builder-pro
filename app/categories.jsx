@@ -296,11 +296,13 @@ const styles = StyleSheet.create({
   },
   navItem: {
     alignItems: "center",
+    
   },
   navText: {
     fontSize: 12,
     color: "#2C3E50",
     marginTop: 4,
+    marginRight: 0,
   },
   navTextInactive: {
     color: "#95A5A6",

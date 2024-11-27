@@ -1,10 +1,9 @@
 // screens/ProductDetail.jsx
-import React, { useState,useContext } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { Alert } from 'react-native';
-import { CartContext } from '../context/CartContext';
 import { router } from 'expo-router';
 import useCartStore from '../stores/useCartStore';
 
