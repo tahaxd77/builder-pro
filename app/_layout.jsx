@@ -1,18 +1,21 @@
-import { Stack } from "expo-router";
+// app/_layout.jsx
+import React, { Suspense } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Slot } from 'expo-router';
+import { ActivityIndicator, View } from 'react-native';
 
-export default function Layout() {
+export default function RootLayout() {
   return (
-    
-      <Stack
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: "#2C3E50",
-          },
-          headerTintColor: "#fff",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-        }}
-      />
+    <SafeAreaProvider>
+      <Suspense
+        fallback={
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color="#2C3E50" />
+          </View>
+        }
+      >
+        <Slot />
+      </Suspense>
+    </SafeAreaProvider>
   );
 }

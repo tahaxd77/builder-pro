@@ -1,8 +1,8 @@
 // Cart.jsx
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList,TouchableOpacity } from 'react-native';
-import useCartStore from '../stores/useCartStore';
-import CartItem from '../components/CartItem';
+import useCartStore from '../../stores/useCartStore';
+import CartItem from '../../components/CartItem';
 
 export default function Cart() {
   // Select only what you need from the store
