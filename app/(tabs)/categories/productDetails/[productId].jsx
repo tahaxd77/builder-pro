@@ -5,7 +5,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { Alert } from 'react-native';
 import { router } from 'expo-router';
-import useCartStore from '../stores/useCartStore';
+import useCartStore from '../../../../stores/useCartStore';
+import productsData from '../../../../data/products.json';
 
 export default function ProductDetail({  }) {
     const { productId, productName, price, stock } = useLocalSearchParams();
@@ -13,8 +14,8 @@ export default function ProductDetail({  }) {
     const [fadeAnim] = useState(new Animated.Value(0));
     const addToCart = useCartStore(state => state.addToCart);
     const cart = useCartStore(state => state.items);
-    console.log("cart: ", cart)
-
+    const displayProduct = productsData.products.find(product =>String(product.ProductID) === String(productId));
+    console.log(displayProduct.ProductID);
     const handleAddToCart = () => {
         addToCart({ productId, productName, price, stock }, quantity);
         Alert.alert('Added to Cart', `You have added ${quantity} of ${productName} to your cart.`);

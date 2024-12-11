@@ -24,11 +24,9 @@ export default function TabsLayout() {
               case 'profile':
                 iconName = 'user';
                 break;
-              case 'products':
-                iconName = 'box';
-                break;
               default:
                 iconName = 'circle';
+                break;
             }
 
             return <Feather name={iconName} size={size} color={color} />;
@@ -37,9 +35,19 @@ export default function TabsLayout() {
           tabBarInactiveTintColor: Colors.inactive, // e.g., "#95A5A6"
         })}
       >
-        <Tabs.Screen name="categories" options={{ title: 'Categories' }} />
-        <Tabs.Screen name="cart" options={{ title: 'Cart' }} />
-        <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
+        <Tabs.Screen
+          name="categories"
+          options={{ title: 'Categories' }}
+        />
+        <Tabs.Screen
+          name="cart"
+          options={{ title: 'Cart' }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{ title: 'Profile' }}
+        />
+        {/* Removed 'products' tab to avoid unnecessary tabs */}
       </Tabs>
     </View>
   );

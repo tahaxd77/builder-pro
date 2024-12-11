@@ -17,25 +17,25 @@ import {
     {
       id: "1",
       name: "Concrete Girders",
-      image: require("../../assets/images/Slab.png"),
+      image: require("../../../assets/images/Slab.png"),
       count: "24 items",
     },
     {
       id: "2",
       name: "Concrete Slabs",
-      image: require("../../assets/images/Girder.png"),
+      image: require("../../../assets/images/Girder.png"),
       count: "18 items",
     },
     {
       id: "3",
       name: "Boundary Wall Columns",
-      image: require("../../assets/images/bw-column.jpg"),
+      image: require("../../../assets/images/bw-column.jpg"),
       count: "12 items",
     },
     {
       id: "4",
       name: "Boundary Wall",
-      image: require("../../assets/images/boundary-wall.jpg"),
+      image: require("../../../assets/images/boundary-wall.jpg"),
       count: "15 items",
     },
   ];
@@ -46,8 +46,8 @@ import {
         style={[styles.categoryCard, { marginLeft: index % 2 === 0 ? 0 : 16 }]}
         onPress={() =>
           router.push({
-            pathname: "/products",
-            params: { categoryName: item.name, categoryId: item.id },
+            pathname: `categories/${item.id}`,
+            // params: {categoryId: item.id },
           })
         }
       >
@@ -67,9 +67,7 @@ import {
           </View>
         </View>
       </TouchableOpacity>
-    );
-    console.log("Home");
-  
+    );  
     return (
       <SafeAreaView style={styles.container}>
         {/* Hero Card */}

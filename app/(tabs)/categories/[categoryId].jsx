@@ -8,14 +8,14 @@ import {
   } from 'react-native';
   import { useLocalSearchParams } from 'expo-router';
   import { useEffect,useState } from 'react';
-  import productData from '../data/products.json';
-  import ProductCard from '../components/ProductCard';
+  import productData from '../../../data/products.json';
+  import ProductCard from '../../../components/ProductCard';
   import { router } from 'expo-router';
   
 
   
   export default function Products() {
-    const { categoryName,categoryId } = useLocalSearchParams();
+    const { categoryId } = useLocalSearchParams();
     
 
   const filteredProducts = productData.products.filter(product => 
@@ -30,9 +30,8 @@ import {
       onPress={() => {
         console.log('Navigating to ProductDetail with ProductID:', item.ProductID);
         router.push({
-          pathname: '/productDetail',
+          pathname: `categories/productDetails/${item.ProductID}`,
           params: { 
-            productId: item.ProductID,
             productName: item.ProductName,
             price: item.UnitPrice,
             stock: item.UnitsInStock
