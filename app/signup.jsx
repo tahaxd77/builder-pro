@@ -8,164 +8,279 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
+  Image,
 } from "react-native";
-import { router } from "expo-router";
-export default SignupScreen = () => {
+import { LinearGradient } from 'expo-linear-gradient';
+import { Feather } from '@expo/vector-icons';
+import { useRouter } from "expo-router";
+
+export default function SignupScreen() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardView}
+      <LinearGradient
+        colors={['#1E3B70', '#29539B']}
+        style={styles.gradient}
       >
-        <View style={styles.formContainer}>
-          <Text style={styles.title}>Create Account</Text>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}
+        >
+          <ScrollView contentContainerStyle={styles.scrollContent}>
+            <View style={styles.content}>
+              {/* Logo/Header Section */}
+              <View style={styles.headerContainer}>
+                <Text style={styles.welcomeText}>Create Account</Text>
+                <Text style={styles.subtitleText}>
+                  Join us today and explore the best deals tailored for you.
+                </Text>
+              </View>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Full Name"
-            value={name}
-            onChangeText={setName}
-            placeholderTextColor="#95A5A6"
-          />
+              {/* Input Fields */}
+              <View style={styles.inputContainer}>
+                {/* Name Input */}
+                <View style={styles.inputWrapper}>
+                  <Feather name="user" size={20} color="#A0A0A0" style={styles.inputIcon} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Full Name"
+                    placeholderTextColor="#A0A0A0"
+                    value={name}
+                    onChangeText={setName}
+                    autoCapitalize="words"
+                  />
+                </View>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            placeholderTextColor="#95A5A6"
-          />
+                {/* Email Input */}
+                <View style={styles.inputWrapper}>
+                  <Feather name="mail" size={20} color="#A0A0A0" style={styles.inputIcon} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    placeholderTextColor="#A0A0A0"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                </View>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            placeholderTextColor="#95A5A6"
-          />
+                {/* Password Input */}
+                <View style={styles.inputWrapper}>
+                  <Feather name="lock" size={20} color="#A0A0A0" style={styles.inputIcon} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    placeholderTextColor="#A0A0A0"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                  />
+                  <TouchableOpacity 
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.eyeIcon}
+                  >
+                    <Feather name={showPassword ? "eye" : "eye-off"} size={20} color="#A0A0A0" />
+                  </TouchableOpacity>
+                </View>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-            placeholderTextColor="#95A5A6"
-          />
+                {/* Confirm Password Input */}
+                <View style={styles.inputWrapper}>
+                  <Feather name="lock" size={20} color="#A0A0A0" style={styles.inputIcon} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Confirm Password"
+                    placeholderTextColor="#A0A0A0"
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    secureTextEntry={!showConfirmPassword}
+                  />
+                  <TouchableOpacity 
+                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={styles.eyeIcon}
+                  >
+                    <Feather name={showConfirmPassword ? "eye" : "eye-off"} size={20} color="#A0A0A0" />
+                  </TouchableOpacity>
+                </View>
+              </View>
 
-          <TouchableOpacity
-            style={styles.signupButton}
-            onPress={() => router.push("/categories")}
-          >
-            <Text style={styles.signupButtonText}>Sign Up</Text>
-          </TouchableOpacity>
+              {/* Signup Button */}
+              <TouchableOpacity
+                style={styles.signupButton}
+                onPress={() => router.push("/categories")}
+              >
+                <Text style={styles.signupButtonText}>Sign Up</Text>
+              </TouchableOpacity>
 
-          <View style={styles.loginContainer}>
-            <Text style={styles.loginText}>Already have an account? </Text>
-            <TouchableOpacity onPress={() => router.push("/login")}>
-              <Text style={styles.loginLinkText}>Login</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
+              {/* Social Signup Options */}
+              <View style={styles.socialContainer}>
+                <Text style={styles.orText}>Or sign up with</Text>
+                <View style={styles.socialButtons}>
+                  <TouchableOpacity style={styles.socialButton}>
+                    <Feather name="facebook" size={24} color="#1877F2" />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.socialButton}>
+                    <Feather name="twitter" size={24} color="#1DA1F2" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Login Link */}
+              <View style={styles.loginContainer}>
+                <Text style={styles.loginText}>Already have an account? </Text>
+                <TouchableOpacity onPress={() => router.push("/login")}>
+                  <Text style={styles.loginLinkText}>Log In</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </LinearGradient>
     </SafeAreaView>
   );
-};
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#2C3E50",
-    justifyContent: "center",
+  },
+  gradient: {
+    flex: 1,
   },
   keyboardView: {
     flex: 1,
-    justifyContent: "center",
   },
-  formContainer: {
-    backgroundColor: "white",
-    marginHorizontal: 20,
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#2C3E50",
-    textAlign: "center",
+  content: {
+    flex: 1,
+    padding: 24,
+  },
+  headerContainer: {
+    alignItems: 'center',
+    marginBottom: 40,
+    paddingHorizontal: 10, // Prevents text from touching screen edges
+  },
+  logo: {
+    width: 100,
+    height: 100,
     marginBottom: 20,
+    resizeMode: 'contain',
+  },
+  welcomeText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#FFF',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  subtitleText: {
+    fontSize: 16,
+    color: '#E0E0E0',
+    textAlign: 'center',
+    flexWrap: 'wrap',
+    width: '80%', // Ensures text has enough space to wrap
+  },
+  inputContainer: {
+    marginBottom: 24,
+  },
+  inputWrapper: {
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  inputIcon: {
+    marginRight: 12,
   },
   input: {
-    backgroundColor: "#ECF0F1",
-    borderRadius: 5,
-    padding: 12,
-    marginBottom: 15,
+    flex: 1,
+    height: 50,
+    color: '#FFF',
     fontSize: 16,
-    color: "#2C3E50",
   },
-  forgotPassword: {
-    alignSelf: "flex-end",
-    marginBottom: 15,
-  },
-  forgotPasswordText: {
-    color: "#3498DB",
-    fontSize: 14,
-  },
-  loginButton: {
-    backgroundColor: "#2C3E50",
-    padding: 15,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  loginButtonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
+  eyeIcon: {
+    padding: 4,
   },
   signupButton: {
-    backgroundColor: "#2C3E50",
-    padding: 15,
-    borderRadius: 5,
-    alignItems: "center",
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
   },
   signupButtonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
+    color: '#1E3B70',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
-  signupContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 15,
+  socialContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
   },
-  signupText: {
-    color: "#7F8C8D",
+  orText: {
+    color: '#E0E0E0',
+    fontSize: 14,
+    marginBottom: 16,
+    textAlign: 'center',
   },
-  signupLinkText: {
-    color: "#3498DB",
-    fontWeight: "bold",
+  socialButtons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 20,
+  },
+  socialButton: {
+    backgroundColor: '#FFF',
+    width: 50,
+    height: 50,
+    borderRadius: 25, // Makes the button circular
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   loginContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center', // Ensures vertical alignment
   },
   loginText: {
-    color: "#7F8C8D",
+    color: '#E0E0E0',
+    fontSize: 14,
+    width : '53%',
   },
   loginLinkText: {
-    color: "#3498DB",
-    fontWeight: "bold",
+    color: '#FFF',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
