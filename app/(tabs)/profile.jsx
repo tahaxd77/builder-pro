@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 export default function Profile() {
   return (
@@ -56,7 +57,7 @@ export default function Profile() {
       </View>
 
       {/* Logout Button */}
-      <TouchableOpacity style={styles.logoutButton}>
+      <TouchableOpacity style={styles.logoutButton} onPress={() => router.push('/login')}>
         <Feather name="log-out" size={24} color="#FF4B4B" />
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
@@ -112,6 +113,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#6B6B6B',
     marginTop: 5,
+    width: '50%',
+    textAlign: 'center',
   },
   infoContainer: {
     flexDirection: 'row',
@@ -130,17 +133,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    alignItems: 'center',
   },
   infoTitle: {
     fontSize: 16,
     color: '#6B6B6B',
     marginTop: 10,
+    width: '70%',
+    textAlign: 'center',
   },
   infoValue: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#2D2D2D',
     marginTop: 5,
+    textAlign: 'center',
   },
   settingsContainer: {
     backgroundColor: '#FFF',

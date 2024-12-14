@@ -63,8 +63,9 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     textAlign: 'center',
-    fontSize: 16,
-    color: '#666',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'red',
     marginTop: 32,
   },
   buyNowButton: {

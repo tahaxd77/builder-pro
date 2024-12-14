@@ -99,7 +99,7 @@ export default function ProductDetail() {
           <View style={styles.productInfo}>
             <Text style={styles.category}>Premium Collection</Text>
             <Text style={styles.title}>{productName}</Text>
-            <Text style={styles.price}>Rs.{price}</Text>
+            <Text style={styles.price}>Rs.1{price}</Text>
           </View>
 
           <View style={styles.detailsCard}>
