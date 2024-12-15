@@ -36,7 +36,7 @@ export default function Login() {
               {/* Logo/Header Section */}
               <View style={styles.headerContainer}>
                 <Image 
-                  source={require('../assets/images/avatar.png')} // Replace with your logo
+                  source={require('../assets/images/logo.png')} // Replace with your logo
                   style={styles.logo}
                 />
                 <Text style={styles.welcomeText}>Welcome Back!</Text>
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: 20,
     resizeMode: 'contain',
+    
   },
   welcomeText: {
     fontSize: 28,

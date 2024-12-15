@@ -3,12 +3,14 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList,TouchableOpacity } from 'react-native';
 import useCartStore from '../../stores/useCartStore';
 import CartItem from '../../components/CartItem';
+import { useRouter } from 'expo-router';
 
 export default function Cart() {
   // Select only what you need from the store
   const items = useCartStore((state) => state.items);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
   console.log("items: ", items)
+  const router = useRouter();
 
   // Compute total using useMemo to avoid unnecessary recalculations
   const cartTotal = useMemo(() => {
@@ -35,7 +37,7 @@ export default function Cart() {
             contentContainerStyle={styles.listContainer}
           />
           <Text style={styles.totalText}>Total: Rs. {cartTotal.toFixed(2)}</Text>
-          <TouchableOpacity style={styles.buyNowButton}>
+          <TouchableOpacity style={styles.buyNowButton} onPress={() => router.push('/checkout')}>
           <Text style={styles.buyNowButtonText}>Buy Now</Text>
         </TouchableOpacity>
         </>
