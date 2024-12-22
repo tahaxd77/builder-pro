@@ -14,6 +14,8 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
+import { supabase } from "../lib/supabase";
+import { Alert, ActivityIndicator } from "react-native";
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -23,6 +25,35 @@ export default function SignupScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function signUpWithEmail() {
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+      });
+
+      if (error) {
+        console.error('SignUp Error:', error);
+        Alert.alert('SignUp Error', error.message);
+      } else {
+        console.log('SignUp Data:', data);
+        Alert.alert('SignUp Successful', 'Please check your inbox for email verification!');
+      }
+    } catch (error) {
+      console.error('Unexpected Error:', error);
+      Alert.alert('Unexpected Error', error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -83,6 +114,7 @@ export default function SignupScreen() {
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={!showPassword}
+                    autoCapitalize="none"
                   />
                   <TouchableOpacity 
                     onPress={() => setShowPassword(!showPassword)}
@@ -102,6 +134,7 @@ export default function SignupScreen() {
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
                     secureTextEntry={!showConfirmPassword}
+                    autoCapitalize="none"
                   />
                   <TouchableOpacity 
                     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -115,10 +148,15 @@ export default function SignupScreen() {
               {/* Signup Button */}
               <TouchableOpacity
                 style={styles.signupButton}
-                onPress={() => router.push("/categories")}
+                onPress={() => {
+                  signUpWithEmail()
+                  router.push("/login")
+                }}
+                disabled={loading}
               >
                 <Text style={styles.signupButtonText}>Sign Up</Text>
               </TouchableOpacity>
+              {loading && <ActivityIndicator size="large" color="#1E3B70" />}
 
               {/* Social Signup Options */}
               <View style={styles.socialContainer}>

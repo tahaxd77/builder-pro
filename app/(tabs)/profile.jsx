@@ -1,9 +1,37 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
+import { supabase } from '../../lib/supabase';
 
 export default function Profile() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
+  async function fetchUserInfo() {
+    setLoading(true);
+    const { data, error } = await supabase.auth.getUser();
+
+    if (error) {
+      Alert.alert('Error', error.message);
+    } else {
+      setUser(data.user);
+    }
+    setLoading(false);
+  }
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#1E3B70" />
+      </View>
+    );
+  }
   return (
     <ScrollView style={styles.container}>
       {/* Profile Header */}

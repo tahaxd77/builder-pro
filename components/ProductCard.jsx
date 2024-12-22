@@ -50,6 +50,6 @@ const styles = StyleSheet.create({
       },
       stockInfo: {
         fontSize: 14,
-        color: '#888',
+        color: '#3498DB',
       },
 })

@@ -34,14 +34,14 @@ const categories = [
   {
     id: "3",
     name: "Boundary Wall Columns",
-    image: require("../../../assets/images/bw-column.jpg"),
+    image: require("../../../assets/images/bw-column.png"),
     count: "12 items",
     icon: "ios-barbell",
   },
   {
     id: "4",
     name: "Boundary Wall",
-    image: require("../../../assets/images/boundary-wall.jpg"),
+    image: require("../../../assets/images/boundary-wall.png"),
     count: "15 items",
     icon: "ios-build",
   },
@@ -91,21 +91,17 @@ export default function Home() {
             <Text style={styles.heroSubtitle}>Transforming Spaces with</Text>
             <Text style={styles.heroSubtitleBold}>Premium Materials</Text>
           </View>
-          <View style={styles.decorativeElement}>
-            <View style={styles.circle} />
-            <View style={styles.line} />
-            <View style={[styles.circle, styles.circleSmall]} />
-          </View>
+         
         </View>
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>15+</Text>
-            <Text style={styles.statLabel}>Years</Text>
+            <Text style={styles.statNumber}>15+ Years</Text>
+            
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>500+</Text>
-            <Text style={styles.statLabel}>Projects</Text>
+            <Text style={styles.statNumber}>500+ Projects</Text>
+            
           </View>
         </View>
       </Animated.View>
@@ -169,7 +165,7 @@ const styles = StyleSheet.create({
   },
   heroSubtitle: {
     fontSize: 16,
-    color: "#BDC3C7",
+    color: "#fff",
     marginTop: 8,
   },
   heroSubtitleBold: {
@@ -207,23 +203,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: "rgb(255, 255, 255)",
     borderRadius: 12,
-    paddingVertical: 12,
+    paddingVertical: 17,
     marginTop: 20,
   },
   statItem: {
     alignItems: "center",
+    color:"#3498db"
   },
   statDivider: {
-    width: 1,
+    width: 2,
     height: 30,
-    backgroundColor: "rgba(255,255,255,0.5)",
+    backgroundColor: "rgb(52, 152, 219)",
+    
   },
   statNumber: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#3498db",
   },
   statLabel: {
     fontSize: 14,
@@ -271,8 +269,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   categoryImage: {
-    width: "80%",
-    height: "80%",
+    width: "100%",
+    height: "120%",
   },
   categoryIcon: {
     position: "absolute",
@@ -294,7 +292,7 @@ const styles = StyleSheet.create({
   },
   count: {
     fontSize: 14,
-    color: "#95A5A6",
+    color: "#3498db",
     textAlign: "center",
   },
 });

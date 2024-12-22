@@ -128,16 +128,16 @@ export default function Checkout() {
           <View style={styles.card}>
             <View style={styles.priceRow}>
               <Text style={styles.priceLabel}>Subtotal</Text>
-              <Text style={styles.priceValue}>₹{subtotal}</Text>
+              <Text style={styles.priceValue}>Rs.{subtotal}</Text>
             </View>
             <View style={styles.priceRow}>
               <Text style={styles.priceLabel}>Delivery Fee</Text>
-              <Text style={styles.priceValue}>₹{deliveryFee}</Text>
+              <Text style={styles.priceValue}>Rs.{deliveryFee}</Text>
             </View>
             <View style={styles.divider} />
             <View style={styles.priceRow}>
               <Text style={styles.totalLabel}>Total</Text>
-              <Text style={styles.totalValue}>₹{total}</Text>
+              <Text style={styles.totalValue}>Rs.{total}</Text>
             </View>
           </View>
         </View>
@@ -152,7 +152,7 @@ export default function Checkout() {
           colors={['#1E3B70', '#29539B']}
           style={styles.buttonGradient}
         >
-          <Text style={styles.buttonText}>Place Order • ₹{total}</Text>
+          <Text style={styles.buttonText}>Place Order • Rs.{total}</Text>
         </LinearGradient>
       </TouchableOpacity>
     </View>
@@ -276,10 +276,12 @@ const styles = StyleSheet.create({
   priceLabel: {
     fontSize: 16,
     color: '#666',
+    width: '70%',
   },
   priceValue: {
     fontSize: 16,
     color: '#2C3E50',
+    width: '20%',
   },
   divider: {
     height: 1,

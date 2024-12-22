@@ -46,11 +46,10 @@ export default function ProductDetail() {
       
       {/* Animated Header */}
       <Animated.View
-  style={[
-    styles.header,
-    { transform: [{ translateY: headerTranslateY }] }
-  ]}
->
+        style={[
+            styles.header,
+          { transform: [{ translateY: headerTranslateY }] }
+        ]}>
   <LinearGradient
     colors={['#1E3B70', '#29539B', '#1E3B70']}
     start={{ x: 0, y: 0 }}
@@ -58,6 +57,12 @@ export default function ProductDetail() {
     style={styles.heroGradient}
   >
     <View style={styles.heroContent}>
+        <TouchableOpacity 
+              style={styles.backButton}
+              onPress={() => router.back()}
+            >
+              <Feather name="arrow-left" size={24} color="#fff" />
+          </TouchableOpacity>
       <Animated.View 
         style={[
           styles.priceTag,
@@ -99,7 +104,7 @@ export default function ProductDetail() {
           <View style={styles.productInfo}>
             <Text style={styles.category}>Premium Collection</Text>
             <Text style={styles.title}>{productName}</Text>
-            <Text style={styles.price}>Rs.1{price}</Text>
+            <Text style={styles.price}>Rs.{price}</Text>
           </View>
 
           <View style={styles.detailsCard}>
@@ -163,8 +168,9 @@ export default function ProductDetail() {
 const styles = StyleSheet.create({
   heroGradient: {
     height: '100%',
-    paddingTop: 60,
+    paddingTop: 50,
   },
+ 
   heroContent: {
     flex: 1,
     alignItems: 'center',
@@ -194,6 +200,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     width: '90%',
+    
   },
   statItem: {
     flex: 1,
@@ -242,7 +249,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: 40,
+    top: 10,
     left: 16,
     width: 40,
     height: 40,

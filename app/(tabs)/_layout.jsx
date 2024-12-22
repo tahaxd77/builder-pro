@@ -4,9 +4,11 @@ import { StyleSheet, View } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { Colors } from '../../constants/Colors'; // Adjust the path based on your project structure
+import { Stack } from 'expo-router';
 
 export default function TabsLayout() {
   return (
+    
     <View style={styles.container}>
       <Tabs
         screenOptions={({ route }) => ({

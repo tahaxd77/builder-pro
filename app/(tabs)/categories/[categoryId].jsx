@@ -15,6 +15,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import productData from '../../../data/products.json';
 import ProductCard from '../../../components/ProductCard';
+import { StatusBar } from 'react-native';
 
 
 const { width } = Dimensions.get('window');
@@ -25,6 +26,21 @@ export default function Products() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const headerHeight = 100;
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+const headerTranslateY = scrollY.interpolate({
+  inputRange: [0, headerHeight],
+  outputRange: [0, -headerHeight],
+  extrapolate: 'clamp'
+});
+
+const headerOpacity = scrollY.interpolate({
+  inputRange: [0, headerHeight],
+  outputRange: [1, 0],
+  extrapolate: 'clamp'
+});
+
 
   const filteredProducts = productData.products.filter(product => 
     String(product.CategoryID) === String(categoryId)
@@ -33,6 +49,9 @@ export default function Products() {
   const category = productData.categories?.find(
     cat => String(cat.id) === String(categoryId)
   );
+
+ 
+
 
   useEffect(() => {
     setLoading(true);
@@ -87,69 +106,94 @@ export default function Products() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#1E3B70', '#29539B']}
-        style={styles.header}
-      >
-        <Text style={styles.headerTitle}>{categoryName}</Text>
-        <Text style={styles.productCount}>
-          {filteredProducts.length} Products
-        </Text>
-      </LinearGradient>
+      <Animated.View style={[
+        styles.headerContainer,
+        {
+          transform: [{ translateY: headerTranslateY }],
+          zIndex: 1,
+          opacity: headerOpacity
+        }
+      ]}>
+        <LinearGradient
+          colors={['#1E3B70', '#29539B']}
+          style={styles.header}
+        >
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+          >
+            <Ionicons name="chevron-back" size={24} color="#FFF" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>{categoryName}</Text>
+          
+        </LinearGradient>
+      </Animated.View>
 
-      {loading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#29539B" />
-        </View>
-      ) : (
-        <>
-          {filteredProducts.length > 0 ? (
-            <FlatList
-              data={filteredProducts}
-              renderItem={renderProduct}
-              keyExtractor={item => item.ProductID}
-              numColumns={2}
-              contentContainerStyle={styles.listContainer}
-              showsVerticalScrollIndicator={false}
-            />
-          ) : (
-            <View style={styles.emptyContainer}>
-              <Ionicons name="cube-outline" size={80} color="#BDC3C7" />
-              <Text style={styles.emptyText}>No products found</Text>
-              <Text style={styles.emptySubtext}>
-                We'll add new products soon!
-              </Text>
-            </View>
-          )}
-        </>
-      )}
+      <Animated.FlatList
+        data={filteredProducts}
+        renderItem={renderProduct}
+        keyExtractor={item => item.ProductID}
+        numColumns={2}
+        contentContainerStyle={[styles.listContainer, {paddingTop: headerHeight + 10}]}
+        showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+        scrollEventThrottle={16}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex : 100,
+    height: 100,
+    
+  },
+  
+  listContainer: {
+    paddingHorizontal: 16,
+  },
   container: {
     flex: 1,
     backgroundColor: '#F5F6FA',
   },
   header: {
-    padding: 16,
-    paddingTop: 48,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    padding:17,
+    marginBottom: 12,
+    flexDirection: 'row', // Ensure row layout
+    alignItems: 'center', // Center align items vertically
   },
   backButton: {
-    marginBottom: 16,
+    width: 32,
+    height: 32,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 16,
+    flexDirection: "row",
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#FFF',
-    marginBottom: 4,
+    textAlign: 'center',
+    paddingBottom: 1,
   },
   productCount: {
     fontSize: 16,
     color: 'rgba(255,255,255,0.8)',
+    width: '50%',
+    textAlign: 'center',
+    paddingBottom: 16,
+    flexDirection: "column",
   },
   loadingContainer: {
     flex: 1,

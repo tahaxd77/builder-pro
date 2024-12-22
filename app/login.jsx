@@ -14,12 +14,28 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { supabase } from '../lib/supabase';
 
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function signInWithEmail() {
+    setLoading(true)
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    })
+
+    if (error) Alert.alert(error.message)
+    setLoading(false)
+  }
+
+  
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -85,7 +101,13 @@ export default function Login() {
               {/* Login Button */}
               <TouchableOpacity
                 style={styles.loginButton}
-                onPress={() => router.push("/categories")}
+                onPress={() => {
+                  if(signInWithEmail()){
+                    console.log("Logged in");
+                    router.push("/categories");
+                  }
+                }}
+                disabled={loading}
               >
                 <Text style={styles.loginButtonText}>Sign In</Text>
               </TouchableOpacity>
@@ -118,7 +140,7 @@ export default function Login() {
   );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
