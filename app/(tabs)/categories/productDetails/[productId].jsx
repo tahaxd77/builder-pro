@@ -44,12 +44,14 @@ export default function ProductDetail() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
       
+      
       {/* Animated Header */}
       <Animated.View
         style={[
             styles.header,
           { transform: [{ translateY: headerTranslateY }] }
         ]}>
+        
   <LinearGradient
     colors={['#1E3B70', '#29539B', '#1E3B70']}
     start={{ x: 0, y: 0 }}
@@ -57,12 +59,6 @@ export default function ProductDetail() {
     style={styles.heroGradient}
   >
     <View style={styles.heroContent}>
-        <TouchableOpacity 
-              style={styles.backButton}
-              onPress={() => router.back()}
-            >
-              <Feather name="arrow-left" size={24} color="#fff" />
-          </TouchableOpacity>
       <Animated.View 
         style={[
           styles.priceTag,
@@ -118,14 +114,14 @@ export default function ProductDetail() {
                 style={styles.quantityBtn}
                 onPress={() => quantity > 1 && setQuantity(q => q - 1)}
               >
-                <AntDesign name="minus" size={20} color="#fff" />
+                <AntDesign name="minus" size={15} color="#fff" />
               </TouchableOpacity>
               <Text style={styles.quantity}>{quantity}</Text>
               <TouchableOpacity
                 style={styles.quantityBtn}
                 onPress={() => quantity < stock && setQuantity(q => q + 1)}
               >
-                <AntDesign name="plus" size={20} color="#fff" />
+                <AntDesign name="plus" size={15} color="#fff" />
               </TouchableOpacity>
             </View>
 
@@ -147,7 +143,7 @@ export default function ProductDetail() {
             addToCart({ productId, productName, price, stock }, quantity);
           }}
         >
-          <Feather name="shopping-cart" size={24} color="white" />
+          <Feather name="shopping-cart" size={20} color="white" style={{alignItems:"center"}} />
           <Text style={styles.buttonText}>Add to Cart</Text>
         </TouchableOpacity>
 
@@ -158,7 +154,10 @@ export default function ProductDetail() {
             router.push('/cart');
           }}
         >
-          <Text style={styles.buyButtonText}>Buy Now • Rs.{price * quantity}</Text>
+          <Text style={{fontSize:14,color: '#fff',
+    fontSize: 16,
+    fontWeight: '600'}}>Buy Now</Text>
+          <Text style={styles.buyButtonText}>Rs.{price * quantity}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -166,9 +165,20 @@ export default function ProductDetail() {
 }
 
 const styles = StyleSheet.create({
+  backButton: {
+    position: 'absolute',
+    top: 10,
+    left: 16,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   heroGradient: {
     height: '100%',
-    paddingTop: 50,
+    paddingTop: 60,
   },
  
   heroContent: {
@@ -179,20 +189,22 @@ const styles = StyleSheet.create({
   },
   priceTag: {
     backgroundColor: 'rgba(255,255,255,0.15)',
-    padding: 16,
+    padding: 13,
     borderRadius: 16,
     alignItems: 'center',
   },
   priceAmount: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#FFF',
+    textAlign: 'center',
   },
   priceLabel: {
     fontSize: 14,
     color: 'rgba(255,255,255,0.8)',
     marginTop: 4,
     width: '170',
+    textAlign: 'center',
   },
   statsContainer: {
     flexDirection: 'row',
@@ -218,7 +230,7 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: 16,
     color: 'rgba(255,255,255,0.8)',
     width: 60,
     textAlign: 'center',
@@ -246,17 +258,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: HEADER_HEIGHT / 2,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 10,
-    left: 16,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   scrollView: {
     flex: 1,
@@ -286,6 +287,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#2C3E50',
     fontWeight: '600',
+    color: '#E74C3C',
   },
   detailsCard: {
     backgroundColor: '#fff',
@@ -316,8 +318,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   quantityBtn: {
-    width: 36,
-    height: 36,
+    width: 20,
+    height: 20,
     borderRadius: 18,
     backgroundColor: '#2C3E50',
     alignItems: 'center',
@@ -350,19 +352,21 @@ const styles = StyleSheet.create({
   },
   cartButton: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#34495E',
+    backgroundColor: '#2C3E50',
     padding: 16,
     borderRadius: 12,
     marginRight: 12,
+    
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
-    marginLeft: 8,
+    width: '100%',
+    textAlign: 'center',
   },
   buyButton: {
     flex: 2,
@@ -374,7 +378,7 @@ const styles = StyleSheet.create({
   },
   buyButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
   },
 });

@@ -152,7 +152,7 @@ export default function Checkout() {
           colors={['#1E3B70', '#29539B']}
           style={styles.buttonGradient}
         >
-          <Text style={styles.buttonText}>Place Order • Rs.{total}</Text>
+          <Text style={styles.buttonText}>Place Order</Text>
         </LinearGradient>
       </TouchableOpacity>
     </View>
@@ -165,15 +165,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F6FA',
   },
   header: {
-    height: 100,
-    paddingTop: StatusBar.currentHeight,
+    height: 70,
+    paddingTop: 9,
     paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
   },
   backButton: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
   itemPrice: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#2C3E50',
+    color: '#E74C3C',
   },
   input: {
     borderWidth: 1,
@@ -276,12 +276,12 @@ const styles = StyleSheet.create({
   priceLabel: {
     fontSize: 16,
     color: '#666',
-    width: '70%',
+    width: '72%',
   },
   priceValue: {
     fontSize: 16,
-    color: '#2C3E50',
-    width: '20%',
+    color: '#E74C3C',
+    width: '72%',
   },
   divider: {
     height: 1,
@@ -292,11 +292,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#2C3E50',
+    width: '72%',
   },
   totalValue: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#1E3B70',
+    width: '72%',
   },
   checkoutButton: {
     margin: 16,

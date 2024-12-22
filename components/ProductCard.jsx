@@ -43,13 +43,13 @@ const styles = StyleSheet.create({
         color: '#2C3E50',
       },
       productPrice: {
-        fontSize: 20,
+        fontSize: 21,
         fontWeight: 'bold',
         color: '#E74C3C',
         marginTop: 10,
       },
       stockInfo: {
-        fontSize: 14,
+        fontSize: 13,
         color: '#3498DB',
       },
 })
