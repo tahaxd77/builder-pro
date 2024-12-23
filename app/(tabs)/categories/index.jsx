@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,74 +11,105 @@ import {
   Animated,
 } from "react-native";
 import { router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { supabase } from "../../../lib/supabase"; // Adjust the path as needed
 
 const { width } = Dimensions.get("window");
 const cardWidth = (width - 48) / 2;
 
-const categories = [
-  {
-    id: "1",
-    name: "Concrete Girders",
-    image: require("../../../assets/images/Slab.png"),
-    count: "24 items",
-    icon: "ios-construction",
-  },
-  {
-    id: "2",
-    name: "Concrete Slabs",
-    image: require("../../../assets/images/Girder.png"),
-    count: "18 items",
-    icon: "ios-home",
-  },
-  {
-    id: "3",
-    name: "Boundary Wall Columns",
-    image: require("../../../assets/images/bw-column.png"),
-    count: "12 items",
-    icon: "ios-barbell",
-  },
-  {
-    id: "4",
-    name: "Boundary Wall",
-    image: require("../../../assets/images/boundary-wall.png"),
-    count: "15 items",
-    icon: "ios-build",
-  },
-];
-
 export default function Home() {
-  const renderCategory = ({ item, index }) => (
-    <TouchableOpacity
-      style={[
-        styles.categoryCard,
-        { marginLeft: index % 2 === 0 ? 0 : 16 },
-      ]}
-      onPress={() =>
-        router.push({
-          pathname: `categories/${item.id}`,
-           params: {categoryName: item.name },
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch categories from Supabase
+  const fetchCategories = async () => {
+    try {
+      const { data, error } = await supabase.from("categories").select("*");
+      // console.log(data);
+      if (error) throw error;
+
+      // Fetch product counts for each category
+      const categoriesWithCounts = await Promise.all(
+        data.map(async (category) => {
+          const { count, error } = await supabase
+            .from("products")
+            .select("*", { count: "exact" })
+            .eq("category_id", category.categoryid); // Match categoryid with products table
+
+          if (error) {
+            console.error("Error fetching product count:", error.message);
+            category.count = 0; // Set count to 0 if error occurs
+          } else {
+            category.count = count;
+          }
+          return category;
         })
-      }
-      activeOpacity={0.8}
-    >
-      <View style={styles.cardContent}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={
-              typeof item.image === "string" ? { uri: item.image } : item.image
-            }
-            style={styles.categoryImage}
-            resizeMode="cover"
-          />
+      );
+      setCategories(categoriesWithCounts); // Update the state with category counts
+    } catch (error) {
+      console.error("Error fetching categories:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const renderCategory = ({ item, index }) => {
+    let imageSource;
+
+    // List of locally available images with their static imports
+    const localImages = {
+      "Slab.png": require("../../../assets/images/Slab.png"),
+      "Girder.png": require("../../../assets/images/Girder.png"),
+      "bw-column.png": require("../../../assets/images/bw-column.png"),
+      "boundary-wall.png": require("../../../assets/images/boundary-wall.png"),
+    };
+
+    // Extract the image file name from the dynamic path
+    const imageName = item.image.split("/").pop(); // Get the file name from the path
+
+    // Check if the image name exists in the localImages mapping
+    imageSource = localImages[imageName] || null;
+
+    if (!imageSource) {
+      console.warn("Image not found for:", item.image); // Log a warning if image not found
+    }
+
+    return (
+      <TouchableOpacity
+        style={[styles.categoryCard, { marginLeft: index % 2 === 0 ? 0 : 16 }]}
+        onPress={() =>
+          router.push({
+            pathname: `categories/${item.categoryid}`,
+            params: { categoryName: item.categoryname },
+          })
+        }
+        activeOpacity={0.8}
+      >
+        <View style={styles.cardContent}>
+          <View style={styles.imageContainer}>
+            {imageSource ? (
+              <Image
+                source={imageSource}
+                style={styles.categoryImage}
+                resizeMode="cover"
+              />
+            ) : (
+              <Text>Image not available</Text>
+            )}
+          </View>
+          <View style={styles.textContent}>
+            <Text style={styles.categoryName}>{item.categoryname}</Text>
+            <Text style={styles.count}>
+              {item.count + " Items" || "No items listed"}
+            </Text>
+          </View>
         </View>
-        <View style={styles.textContent}>
-          <Text style={styles.categoryName}>{item.name}</Text>
-          <Text style={styles.count}>{item.count}</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -91,17 +122,14 @@ export default function Home() {
             <Text style={styles.heroSubtitle}>Transforming Spaces with</Text>
             <Text style={styles.heroSubtitleBold}>Premium Materials</Text>
           </View>
-         
         </View>
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>15+ Years</Text>
-            
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>500+ Projects</Text>
-            
           </View>
         </View>
       </Animated.View>
@@ -109,14 +137,18 @@ export default function Home() {
       {/* Categories Section */}
       <View style={styles.categoriesSection}>
         <Text style={styles.sectionTitle}>Our Categories</Text>
-        <FlatList
-          data={categories}
-          renderItem={renderCategory}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          contentContainerStyle={styles.listContainer}
-          showsVerticalScrollIndicator={false}
-        />
+        {loading ? (
+          <Text style={{ textAlign: "center", marginTop: 20 }}>Loading...</Text>
+        ) : (
+          <FlatList
+            data={categories}
+            renderItem={renderCategory}
+            keyExtractor={(item) => item.categoryid.toString()}
+            numColumns={2}
+            contentContainerStyle={styles.listContainer}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -173,32 +205,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "600",
   },
-  decorativeElement: {
-    alignItems: "center",
-    marginRight: 10,
-    height: 140,
-    justifyContent: "center",
-    position: "relative",
-  },
-  circle: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: "#3498db",
-    marginBottom: 8,
-  },
-  circleSmall: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#E0E0E0",
-  },
-  line: {
-    width: 2,
-    height: 50,
-    backgroundColor: "#3498db",
-    marginVertical: 4,
-  },
   statsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -210,23 +216,16 @@ const styles = StyleSheet.create({
   },
   statItem: {
     alignItems: "center",
-    color:"#3498db"
   },
   statDivider: {
     width: 2,
     height: 30,
     backgroundColor: "rgb(52, 152, 219)",
-    
   },
   statNumber: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#3498db",
-  },
-  statLabel: {
-    fontSize: 14,
-    color: "#DDE1E6",
-    marginTop: 4,
   },
   categoriesSection: {
     flex: 1,
@@ -271,14 +270,6 @@ const styles = StyleSheet.create({
   categoryImage: {
     width: "100%",
     height: "120%",
-  },
-  categoryIcon: {
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
-    padding: 6,
-    borderRadius: 12,
   },
   textContent: {
     padding: 16,

@@ -12,10 +12,12 @@ import {
 import { router } from "expo-router";
 import { useEffect, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { Feather } from '@expo/vector-icons';
-import * as Animatable from 'react-native-animatable';
+import { Feather } from "@expo/vector-icons";
+import * as Animatable from "react-native-animatable";
 
-const { width, height } = Dimensions.get('window');
+import { supabase } from "../lib/supabase"; // Import Supabase client
+
+const { width, height } = Dimensions.get("window");
 
 export default function GettingStarted() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -23,6 +25,16 @@ export default function GettingStarted() {
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
+    const checkLoginStatus = async () => {
+      // Check session using Supabase or AsyncStorage
+      const { data: session } = await supabase.auth.getSession();
+      if (session?.user) {
+        router.replace("/categories");
+      }
+    };
+
+    checkLoginStatus();
+
     // Parallel animations for initial load
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -61,19 +73,23 @@ export default function GettingStarted() {
       source={require("../assets/images/bg-image.jpg")}
       style={styles.backgroundImage}
     >
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
       <LinearGradient
-        colors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.9)']}
+        colors={["rgba(0,0,0,0.3)", "rgba(0,0,0,0.9)"]}
         style={styles.gradient}
       >
         <View style={styles.container}>
-          <Animated.View 
+          <Animated.View
             style={[
-              styles.logoContainer, 
-              { 
+              styles.logoContainer,
+              {
                 opacity: fadeAnim,
-                transform: [{ scale: pulseAnim }]
-              }
+                transform: [{ scale: pulseAnim }],
+              },
             ]}
           >
             <View style={styles.logoCircle}>
@@ -81,7 +97,7 @@ export default function GettingStarted() {
             </View>
           </Animated.View>
 
-          <Animated.View 
+          <Animated.View
             style={[
               styles.contentContainer,
               {
@@ -91,30 +107,27 @@ export default function GettingStarted() {
             ]}
           >
             <View style={styles.glassCard}>
-              <Animatable.Text 
-                animation="fadeInDown" 
-                style={styles.title}
-              >
+              <Animatable.Text animation="fadeInDown" style={styles.title}>
                 Builders Pro
               </Animatable.Text>
-              <Animatable.Text 
-                animation="fadeInUp" 
-                delay={300} 
+              <Animatable.Text
+                animation="fadeInUp"
+                delay={300}
                 style={styles.subtitle}
               >
                 Premium Quality Precast Solutions
               </Animatable.Text>
-              
+
               <View style={styles.featuresContainer}>
                 {[
                   { icon: "check-circle", text: "Premium Materials" },
                   { icon: "truck", text: "Fast Delivery" },
-                  { icon: "shield", text: "Quality Assured" }
+                  { icon: "shield", text: "Quality Assured" },
                 ].map((feature, index) => (
-                  <Animatable.View 
+                  <Animatable.View
                     key={index}
                     animation="fadeInRight"
-                    delay={600 + (index * 200)}
+                    delay={600 + index * 200}
                     style={styles.featureItem}
                   >
                     <View style={styles.iconCircle}>
@@ -132,7 +145,7 @@ export default function GettingStarted() {
               onPress={() => router.push("/login")}
             >
               <LinearGradient
-                colors={['#1E3B70', '#29539B']}
+                colors={["#1E3B70", "#29539B"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={styles.buttonGradient}
@@ -153,8 +166,8 @@ export default function GettingStarted() {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   gradient: {
     flex: 1,
@@ -165,16 +178,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 40,
   },
   logoCircle: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor:'#1E3B70',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#1E3B70",
+    alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.44,
@@ -183,37 +196,34 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'center',
-    
-    
+    justifyContent: "center",
   },
   glassCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: "rgba(255, 255, 255, 0.12)",
     borderRadius: 32,
     padding: 30,
-    backdropFilter: 'blur(10px)',
+    backdropFilter: "blur(10px)",
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: "rgba(255, 255, 255, 0.2)",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.25,
     shadowRadius: 13.16,
-    
   },
   title: {
     fontSize: 36,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    textAlign: 'center',
+    fontWeight: "800",
+    color: "#FFFFFF",
+    textAlign: "center",
     marginBottom: 10,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
   subtitle: {
     fontSize: 18,
-    color: 'rgba(255, 255, 255, 0.8)',
-    textAlign: 'center',
+    color: "rgba(255, 255, 255, 0.8)",
+    textAlign: "center",
     marginBottom: 30,
   },
   featuresContainer: {
@@ -221,9 +231,9 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   featureItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 10,
     padding: 12,
   },
@@ -231,9 +241,9 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 24,
-    backgroundColor: 'rgba(0, 0, 0, 0.23)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.23)",
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -242,15 +252,15 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   featureText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   button: {
     marginTop: 30,
     marginHorizontal: 20,
     borderRadius: 30,
-    overflow: 'hidden',
+    overflow: "hidden",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -258,31 +268,31 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   buttonGradient: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 18,
     paddingHorizontal: 24,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: "700",
     marginRight: 12,
   },
   arrowContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
     padding: 10,
     borderRadius: 20,
     width: 40,
     height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   progressContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 40,
     gap: 8,
   },
