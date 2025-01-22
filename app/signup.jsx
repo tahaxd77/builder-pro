@@ -45,7 +45,16 @@ export default function SignupScreen() {
         Alert.alert('SignUp Error', error.message);
       } else {
         console.log('SignUp Data:', data);
-        Alert.alert('SignUp Successful', 'Please check your inbox for email verification!');
+        if(data?.user?.id){
+          const {error} = await supabase.from('customers')
+          .insert([{customername: name, email: email, password: password}]);
+          if(error){
+            console.error('Error inserting data:', error);
+            Alert.alert('Error inserting data:', error.message);
+          } else {
+            Alert.alert('SignUp Successful', 'Please check your inbox for email verification!');
+          }
+        }
       }
     } catch (error) {
       console.error('Unexpected Error:', error);

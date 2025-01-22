@@ -12,10 +12,12 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { supabase } from "../../lib/supabase";
+import { navigate } from "expo-router/build/global-state/routing";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [fullName, setFullName] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -23,15 +25,31 @@ export default function Profile() {
   }, []);
 
   async function fetchUserInfo() {
-    setLoading(true);
-    const { data, error } = await supabase.auth.getUser();
-
-    if (error) {
-      Alert.alert("Error", error.message);
-    } else {
-      setUser(data.user);
+    try{
+      setLoading(true);
+      const {data:userResponse,error} = await supabase.auth.getUser();
+      console.log(userResponse.user.email);
+      if (error){
+          console.error('Error fetching user:', error);
+      };
+      const {data: profileData, error: profileError} = await supabase
+          .from('customers')
+          .select('customername, email, phonenumber')
+          .eq('email', userResponse?.user?.email)
+          .maybeSingle();
+      if (profileError) throw profileError;
+      console.log(profileData);
+      setUser(profileData);
+      console.log(user);
+      setFullName(profileData.customername);
+      
     }
-    setLoading(false);
+    catch (error) {
+      Alert.alert('Error', error.message);
+      console.error('Error fetching user:', error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (loading) {
@@ -55,7 +73,7 @@ export default function Profile() {
           </TouchableOpacity>
         </View>
         <Text style={styles.name}>
-          {user?.user_metadata?.full_name || "John Doe"}
+          {fullName|| "No Name"}
         </Text>
         <Text style={styles.email}>{user?.email || "No email available"}</Text>
       </View>
@@ -76,7 +94,7 @@ export default function Profile() {
 
       {/* Settings List */}
       <View style={styles.settingsContainer}>
-        <TouchableOpacity style={styles.settingItem}>
+        <TouchableOpacity style={styles.settingItem} onPress={() => router.push("../../personalDetails")}>
           <Feather name="user" size={24} color="#4A4A4A" />
           <Text style={styles.settingText}>Personal Details</Text>
           <Feather name="chevron-right" size={24} color="#4A4A4A" />

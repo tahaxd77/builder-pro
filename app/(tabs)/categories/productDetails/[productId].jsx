@@ -209,9 +209,6 @@ export default function ProductDetail() {
           >
             Buy Now
           </Text>
-          <Text style={styles.buyButtonText}>
-            Rs.{product.unit_price * quantity}
-          </Text>
         </TouchableOpacity>
       </View>
     </View>
