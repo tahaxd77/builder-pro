@@ -38,9 +38,7 @@ export default function Profile() {
           .eq('email', userResponse?.user?.email)
           .maybeSingle();
       if (profileError) throw profileError;
-      console.log(profileData);
       setUser(profileData);
-      console.log(user);
       setFullName(profileData.customername);
       
     }
@@ -100,7 +98,7 @@ export default function Profile() {
           <Feather name="chevron-right" size={24} color="#4A4A4A" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.settingItem}>
+        <TouchableOpacity style={styles.settingItem} onPress={() => router.push("/shippingDetails")}>
           <Feather name="map-pin" size={24} color="#4A4A4A" />
           <Text style={styles.settingText}>Shipping Address</Text>
           <Feather name="chevron-right" size={24} color="#4A4A4A" />

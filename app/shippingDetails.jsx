@@ -7,17 +7,17 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  LinearGradient,
 } from 'react-native';
-import { supabase } from '../lib/supabase';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-// import { supabase } from '../lib/supabse'; // Uncomment if using Supabase
+import { supabase } from '../lib/supabase';
 
-export default function PersonalDetails() {
+
+export default function ShippingDetails() {
   const [user, setUser] = useState(null);        // fetched user object
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const router = useRouter();
@@ -29,22 +29,20 @@ export default function PersonalDetails() {
       try{
         setLoading(true);
         const {data:userResponse,error} = await supabase.auth.getUser();
-        console.log(userResponse.user.email);
         if (error){
             console.error('Error fetching user:', error);
         };
+        console.log(userResponse);
         const {data: profileData, error: profileError} = await supabase
             .from('customers')
-            .select('customername, email, phonenumber')
+            .select('email,address, city')
             .eq('email', userResponse?.user?.email)
             .maybeSingle();
         if (profileError) throw profileError;
-        console.log(profileData);
         setUser(profileData);
-        console.log(user);
-        setFullName(profileData.customername);
-        setEmail(profileData.email);
-        setPhoneNumber(profileData.phonenumber);
+        console.log(profileData);
+        setAddress(profileData.address);
+        setCity(profileData.city);
       }
       catch (error) {
         Alert.alert('Error', error.message);
@@ -53,16 +51,6 @@ export default function PersonalDetails() {
         setLoading(false);
       }
     })();
-
-    // // Mock data for demonstration:
-    // const mockData = {
-    //   full_name: 'John Doe',
-    //   phone: '1234567890',
-    // };
-    // setUser(mockData);
-    // setFullName(mockData.full_name);
-    // setPhoneNumber(mockData.phone);
-    // setLoading(false);
   }, []);
 
   // Save updates
@@ -71,9 +59,8 @@ export default function PersonalDetails() {
     try {
       // Example with Supabase:
       const updates = {
-        customername: fullName,
-        phonenumber: phoneNumber,
-        email: email,
+        address: address,
+        city: city,
       };
       const { error } = await supabase.from('customers')
         .update(updates)
@@ -83,11 +70,10 @@ export default function PersonalDetails() {
       // Update local user
       setUser(prev => ({
         ...prev,
-        customername: fullName,
-        email: email,
-        phone: phoneNumber,
+        address: address,
+        city: city,
       }));
-      Alert.alert('Success', 'Personal details updated.');
+      Alert.alert('Success', 'Address details updated.');
       setEditMode(false);
     } catch (error) {
       Alert.alert('Update Error', error.message);
@@ -106,29 +92,24 @@ export default function PersonalDetails() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+        <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
           <Ionicons name="chevron-back" size={24} color="#FFF" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Personal Details</Text>
+        <Text style={styles.headerTitle}>Shipping Details</Text>
       </View>
 
       {/* Read-only view */}
       {!editMode && (
         <View style={styles.editContainer}>
-          <Text style={styles.label}>Name</Text>
-          <Text style={styles.value}>{fullName || 'No Name'}</Text>
+          <Text style={styles.label}>Address</Text>
+          <Text style={styles.value}>{address || 'No Name'}</Text>
 
-          <Text style={styles.label}>Email</Text>
-          <Text style={styles.value}>{email || 'No Email'}</Text>
-
-          <Text style={styles.label}>Phone Number</Text>
-          <Text style={styles.value}>{phoneNumber || 'No Email'}</Text>
-
-
+          <Text style={styles.label}>City</Text>
+          <Text style={styles.value}>{city || 'No Email'}</Text>
 
 
           <TouchableOpacity
@@ -145,24 +126,17 @@ export default function PersonalDetails() {
         <View style={styles.editContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Full Name"
-            value={fullName}
-            onChangeText={setFullName}
+            placeholder="Address"
+            value={address}
+            onChangeText={setAddress}
           />
           <TextInput
             style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
+            placeholder="City"
+            value={city}
+            onChangeText={setCity}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Phone Number"
-            keyboardType="phone-pad"
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-          />
-
+          
           <View style={styles.buttonRow}>
             <TouchableOpacity
               style={[styles.actionButton, { backgroundColor: '#1E3B70' }]}
@@ -180,8 +154,8 @@ export default function PersonalDetails() {
               style={[styles.actionButton, { backgroundColor: '#999' }]}
               onPress={() => {
                 // Revert changes
-                setFullName(user.full_name);
-                setPhoneNumber(user.phone);
+                setAddress(user.address);
+                setCity(user.city);
                 setEditMode(false);
               }}
               disabled={loading}
@@ -202,16 +176,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5F6FA',
   },
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F6FA',
-  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#1E3B70',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    padding:17,
+    marginBottom: 12,
+    width: '100%',
   },
   headerTitle: {
     fontSize: 20,
@@ -227,13 +198,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    color: '#1E3B70',
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F6FA',
   },
   editContainer: {
     backgroundColor: '#fff',
@@ -243,8 +210,8 @@ const styles = StyleSheet.create({
   },
   label: {
     color: '#333',
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 18,
+    fontWeight: 'bold',
     marginBottom: 4,
   },
   value: {
@@ -265,7 +232,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-
   input: {
     borderWidth: 1,
     borderColor: '#E0E0E0',
