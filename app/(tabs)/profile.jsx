@@ -78,15 +78,13 @@ export default function Profile() {
 
       {/* Info Cards */}
       <View style={styles.infoContainer}>
-        <View style={styles.infoCard}>
+        <TouchableOpacity style={styles.infoCard} onPress={() => router.push("/orders")}>
           <Feather name="shopping-bag" size={24} color="#4A4A4A" />
           <Text style={styles.infoTitle}>My Orders</Text>
-          <Text style={styles.infoValue}>12</Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.infoCard}>
           <Feather name="heart" size={24} color="#4A4A4A" />
           <Text style={styles.infoTitle}>Wishlist</Text>
-          <Text style={styles.infoValue}>5</Text>
         </View>
       </View>
 
@@ -182,7 +180,7 @@ const styles = StyleSheet.create({
   },
   infoCard: {
     backgroundColor: "#FFF",
-    padding: 20,
+    paddingTop: 20,
     borderRadius: 15,
     alignItems: "center",
     width: "45%",
@@ -196,7 +194,7 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: 16,
     color: "#6B6B6B",
-    marginTop: 10,
+    margin: 15,
     width: "70%",
     textAlign: "center",
   },

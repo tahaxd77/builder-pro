@@ -13,6 +13,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import useCartStore from '../stores/useCartStore';
+import { supabase } from '../lib/supabase';
 
 export default function Checkout() {
   const router = useRouter();
@@ -21,15 +22,51 @@ export default function Checkout() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    address: '',
-    city: '',
-    pincode: '',
+    shipaddress: '',
+    shipcity: '',
   });
   const [paymentMethod, setPaymentMethod] = useState('cod');
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   const deliveryFee = 100;
   const total = subtotal + deliveryFee;
+
+  const [deliveryDate, setDeliveryDate] = useState(() => {
+    const date = new Date();
+    date.setDate(date.getDate() + 3);
+    return date.toDateString(); // or use toISOString() if preferred
+  });
+
+  const handleOrder = async () => {
+    
+    const {data: userResponse, error} = await supabase.auth.getUser();
+    const {data:customerId } = await supabase
+    .from('customers')
+    .select('customerid')
+    .eq('email', userResponse?.user?.email)
+    .single();
+    const {error: insertError} = await supabase
+      .from('orders')
+      .insert([
+        {
+          customerid: customerId.customerid,
+          orderdate: new Date(),
+          shipdate: deliveryDate,
+          totalprice: total,
+          commission: (total*15)/100,
+          carriageid: 1,
+          status: 'PENDING',
+          ...formData,
+        },
+      ]);
+    if (insertError) {
+      console.error('Error inserting order:', insertError.message);
+      return;
+    }
+    else{
+      console.log('Order placed successfully');
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -85,22 +122,25 @@ export default function Checkout() {
               placeholder="Delivery Address"
               multiline
               value={formData.address}
-              onChangeText={(text) => setFormData({...formData, address: text})}
+              onChangeText={(text) => setFormData({...formData, shipaddress: text})}
             />
             <View style={styles.row}>
               <TextInput
                 style={[styles.input, styles.halfInput]}
                 placeholder="City"
                 value={formData.city}
-                onChangeText={(text) => setFormData({...formData, city: text})}
+                onChangeText={(text) => setFormData({...formData, shipcity: text})}
               />
-              <TextInput
-                style={[styles.input, styles.halfInput]}
-                placeholder="PIN Code"
-                keyboardType="number-pad"
-                value={formData.pincode}
-                onChangeText={(text) => setFormData({...formData, pincode: text})}
-              />
+            </View>
+          </View>
+        </View>
+
+        {/* Delivery Date */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Delivery Date</Text>
+          <View style={styles.card}>
+            <View style={styles.deliveryDateContainer}>
+              <Text style={styles.deliveryDateValue}>{deliveryDate}</Text>
             </View>
           </View>
         </View>
@@ -146,7 +186,10 @@ export default function Checkout() {
       {/* Checkout Button */}
       <TouchableOpacity 
         style={styles.checkoutButton}
-        onPress={() => router.push('/orderConfirmation')}
+        onPress={()=>{
+          handleOrder();
+          router.push("/cart");
+        }}
       >
         <LinearGradient
           colors={['#1E3B70', '#29539B']}
@@ -160,6 +203,19 @@ export default function Checkout() {
 }
 
 const styles = StyleSheet.create({
+  deliveryDateContainer: {
+    padding: 10,
+    borderRadius: 8,
+  },
+  deliveryDateLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  deliveryDateValue: {
+    fontSize: 18,
+    color: '#555',
+  },
   container: {
     flex: 1,
     backgroundColor: '#F5F6FA',
