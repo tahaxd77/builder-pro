@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../../../lib/supabase';
 
 
 export default function ShippingDetails() {
@@ -180,9 +180,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#1E3B70',
-    padding:17,
-    marginBottom: 12,
-    width: '100%',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
   headerTitle: {
     fontSize: 20,

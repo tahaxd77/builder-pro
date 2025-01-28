@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { supabase } from "../../lib/supabase";
+import { supabase } from "../../../lib/supabase";
 import { navigate } from "expo-router/build/global-state/routing";
 
 export default function Profile() {
@@ -63,7 +63,7 @@ export default function Profile() {
       <View style={styles.header}>
         <View style={styles.avatarContainer}>
           <Image
-            source={require("../../assets/images/avatar.png")}
+            source={require("../../../assets/images/avatar.png")}
             style={styles.avatar}
           />
           <TouchableOpacity style={styles.editButton}>
@@ -78,7 +78,7 @@ export default function Profile() {
 
       {/* Info Cards */}
       <View style={styles.infoContainer}>
-        <TouchableOpacity style={styles.infoCard} onPress={() => router.push("/orders")}>
+        <TouchableOpacity style={styles.infoCard} onPress={() => router.push("profile/orders")}>
           <Feather name="shopping-bag" size={24} color="#4A4A4A" />
           <Text style={styles.infoTitle}>My Orders</Text>
         </TouchableOpacity>
@@ -90,13 +90,13 @@ export default function Profile() {
 
       {/* Settings List */}
       <View style={styles.settingsContainer}>
-        <TouchableOpacity style={styles.settingItem} onPress={() => router.push("../../personalDetails")}>
+        <TouchableOpacity style={styles.settingItem} onPress={() => router.push("profile/personalDetails")}>
           <Feather name="user" size={24} color="#4A4A4A" />
           <Text style={styles.settingText}>Personal Details</Text>
           <Feather name="chevron-right" size={24} color="#4A4A4A" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.settingItem} onPress={() => router.push("/shippingDetails")}>
+        <TouchableOpacity style={styles.settingItem} onPress={() => router.push("profile/shippingDetails")}>
           <Feather name="map-pin" size={24} color="#4A4A4A" />
           <Text style={styles.settingText}>Shipping Address</Text>
           <Feather name="chevron-right" size={24} color="#4A4A4A" />
